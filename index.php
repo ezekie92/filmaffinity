@@ -6,11 +6,19 @@
     </head>
     <body>
         <?php
+        $pdo = new PDO('pgsql:host=localhost;dbname=fa', 'fa', 'fa');
+
+        if (isset($_POST['id'])) {
+            $id = $_POST['id'];
+            $st = $pdo->prepare('DELETE FROM peliculas WHERE id = :id');
+            $st->execute([':id' => $id]);?>
+            <h3 style="color: green">Película borrada correctamente.</h3>
+        <?php
+        }
+
         $buscarTitulo = isset($_GET['buscarTitulo'])
                       ? trim($_GET['buscarTitulo'])
                       : "";
-
-        $pdo = new PDO('pgsql:host=localhost;dbname=fa', 'fa', 'fa');
         $st = $pdo->prepare('SELECT p.*, genero
                                FROM peliculas p
                                JOIN generos g
@@ -32,22 +40,26 @@
         <div style="margin-top: 20px">
             <table border="1" style="margin:auto">
                 <thead>
-                    <th>Id</th>
                     <th>Título</th>
                     <th>Año</th>
                     <th>Sinopsis</th>
                     <th>Duración</th>
                     <th>Genero</th>
+                    <th>Acciones</th>
                 </thead>
                 <tbody>
                     <?php foreach ($st as $fila): ?>
                         <tr>
-                            <td><?= $fila['id'] ?></td>
                             <td><?= $fila['titulo'] ?></td>
                             <td><?= $fila['anyo'] ?></td>
                             <td><?= $fila['sinopsis'] ?></td>
                             <td><?= $fila['duracion'] ?></td>
                             <td><?= $fila['genero'] ?></td>
+                            <td>
+                                <a href="confirm_borrado.php?id=<?= $fila['id'] ?>">
+                                    Borrar
+                                </a>
+                            </td>
                         </tr>
                     <?php endforeach ?>
                 </tbody>
