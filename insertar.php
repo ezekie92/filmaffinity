@@ -9,6 +9,24 @@
         <title></title>
     </head>
     <body>
+        <?php
+        const PAR = [
+            'titulo' => '',
+            'anyo'=> '',
+            'sinopsis' => '',
+            'duracion' => '',
+            'genero_id' => '',
+        ];
+
+        extract(PAR);
+
+        if (isset($_POST['titulo'], $_POST['anyo'], $_POST['sinopsis'],
+                  $_POST['duracion'], $_POST['genero_id'])) {
+            extract(array_map('trim', $_POST), EXTR_IF_EXISTS);
+
+        }
+        ?>
+        <br/>
         <div class="container">
             <div class="panel panel-primary">
                 <div class="panel-heading">
@@ -18,23 +36,30 @@
                     <form action="#" method="post">
                         <div class="form-group">
                             <label for="titulo">Título</label>
-                            <input id="titulo" type="text" name="titulo" class="form-control">
+                            <input id="titulo" type="text" name="titulo"
+                                   class="form-control" value="<?= $titulo ?>">
                         </div>
                         <div class="form-group">
                             <label for="anyo">Año</label>
-                            <input id="anyo" type="text" name="anyo" class="form-control">
+                            <input id="anyo" type="text" name="anyo"
+                                   class="form-control" value="<?= $anyo ?>">
                         </div>
                         <div class="form-group">
                             <label for="sinopsis">Sinopsis</label>
-                            <textarea id="sinopsis" name="sinopsis" rows="8" cols="80" class="form-control"></textarea>
+                            <textarea id="sinopsis"
+                                      name="sinopsis"
+                                      rows="8" cols="80"
+                                      class="form-control"><?= $sinopsis ?></textarea>
                         </div>
                         <div class="form-group">
                             <label for="duracion">Duración</label>
-                            <input id="duracion" type="text" name="duracion" class="form-control">
+                            <input id="duracion" type="text" name="duracion"
+                                   class="form-control" value="<?= $duracion ?>">
                         </div>
                         <div class="form-group">
                             <label for="genero_id">Género</label>
-                            <input id="genero_id" type="text" name="genero_id" class="form-control">
+                            <input id="genero_id" type="text" name="genero_id"
+                                   class="form-control" value="<?= $genero_id ?>">
                         </div>
                         <input type="submit" name="Insertar" class="btn btn-success">
                         <a href="index.php" class="btn btn-info">Volver</a>
