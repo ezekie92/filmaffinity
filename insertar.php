@@ -10,6 +10,8 @@
     </head>
     <body>
         <?php
+        require './auxiliar.php';
+
         const PAR = [
             'titulo' => '',
             'anyo'=> '',
@@ -23,7 +25,19 @@
         if (isset($_POST['titulo'], $_POST['anyo'], $_POST['sinopsis'],
                   $_POST['duracion'], $_POST['genero_id'])) {
             extract(array_map('trim', $_POST), EXTR_IF_EXISTS);
+            // Filtrado de la entrada
+            $pdo = conectar();
+            $st = $pdo->prepare('INSERT INTO peliculas (titulo, anyo, sinopsis, duracion, genero_id)
+                                 VALUES (:titulo, :anyo, :sinopsis, :duracion, :genero_id)');
 
+            $st->execute([
+                ':titulo' => $titulo,
+                ':anyo' => $anyo,
+                ':sinopsis' => $sinopsis,
+                ':duracion' => $duracion,
+                ':genero_id' => $genero_id,
+            ]);
+            header('Location: index.php');
         }
         ?>
         <br/>
@@ -61,7 +75,7 @@
                             <input id="genero_id" type="text" name="genero_id"
                                    class="form-control" value="<?= $genero_id ?>">
                         </div>
-                        <input type="submit" name="Insertar" class="btn btn-success">
+                        <input type="submit" name="Insertar" class="btn btn-success" value="Insertar">
                         <a href="index.php" class="btn btn-info">Volver</a>
                     </form>
                 </div>
