@@ -6,7 +6,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Insertar una nueva película</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <title></title>
     </head>
     <body>
         <?php
@@ -14,7 +13,7 @@
 
         const PAR = [
             'titulo' => '',
-            'anyo'=> '',
+            'anyo' => '',
             'sinopsis' => '',
             'duracion' => '',
             'genero_id' => '',
@@ -22,68 +21,69 @@
 
         extract(PAR);
 
-        if (isset($_POST['titulo'], $_POST['anyo'], $_POST['sinopsis'],
-                  $_POST['duracion'], $_POST['genero_id'])) {
-            try {
-                extract(array_map('trim', $_POST), EXTR_IF_EXISTS);
-                $error = [];
-                $flt = [];
-                $flt['titulo'] = comprobarTitulo($error);
-                $flt['anyo'] = comprobarAnyo($error);
-                $flt['sinopsis'] = trim(filter_input(INPUT_POST, 'sinopsis'));
-                $flt['duracion'] = comprobarDuracion($error);
-                $pdo = conectar();
-                $flt['generoId'] = comprobarGeneroId($pdo, $error);
-                comprobarErrores($error);
-                insertarPelicula($pdo, $flt);
-                header('Location: index.php');
-            } catch (EmptyParamException $e){
-                // No hago nada
-            } catch (ParamException $e){
-                header('Location: index.php');
-            } catch (ValidationException $e) {
-                foreach ($error as $err) {
-                    echo "<h4>$err</h4>";
-                }
+        try {
+            comprobarParametros(PAR);
+            extract(array_map('trim', $_POST), EXTR_IF_EXISTS);
+            $error = [];
+            $flt['titulo'] = comprobarTitulo($error);
+            $flt['anyo'] = comprobarAnyo($error);
+            $flt['sinopsis'] = trim(filter_input(INPUT_POST, 'sinopsis'));
+            $flt['duracion'] = comprobarDuracion($error);
+            $pdo = conectar();
+            $flt['genero_id'] = comprobarGeneroId($pdo, $error);
+            comprobarErrores($error);
+            insertarPelicula($pdo, $flt);
+            header('Location: index.php');
+        } catch (EmptyParamException $e) {
+            // No hago nada
+        } catch (ParamException $e) {
+            header('Location: index.php');
+        } catch (ValidationException $e) {
+            foreach ($error as $err) {
+                echo "<h4>$err</h4>";
             }
         }
         ?>
-        <br/>
+        <br>
         <div class="container">
             <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <h3 class="panel-title">Insertar una nueva pelicula...</h3>
+                    <h3 class="panel-title">Insertar una nueva película...</h3>
                 </div>
                 <div class="panel-body">
-                    <form action="#" method="post">
-                        <div class="form-group">
-                            <label for="titulo">Título</label>
+                    <form action="" method="post">
+                        <div class="form-group <?= hasError('titulo', $error) ?>">
+                            <label for="titulo" class="control-label">Título</label>
                             <input id="titulo" type="text" name="titulo"
                                    class="form-control" value="<?= $titulo ?>">
                         </div>
-                        <div class="form-group">
-                            <label for="anyo">Año</label>
+                        <div class="form-group <?= hasError('anyo', $error) ?>">
+                            <label for="anyo" class="control-label">Año</label>
                             <input id="anyo" type="text" name="anyo"
                                    class="form-control" value="<?= $anyo ?>">
                         </div>
                         <div class="form-group">
-                            <label for="sinopsis">Sinopsis</label>
+                            <label for="sinopsis" class="control-label">Sinopsis</label>
                             <textarea id="sinopsis"
                                       name="sinopsis"
-                                      rows="8" cols="80"
+                                      rows="8"
+                                      cols="80"
                                       class="form-control"><?= $sinopsis ?></textarea>
                         </div>
-                        <div class="form-group">
-                            <label for="duracion">Duración</label>
+                        <div class="form-group <?= hasError('duracion', $error) ?>">
+                            <label for="duracion" class="control-label">Duración</label>
                             <input id="duracion" type="text" name="duracion"
-                                   class="form-control" value="<?= $duracion ?>">
+                                   class="form-control"
+                                   value="<?= $duracion ?>">
                         </div>
-                        <div class="form-group">
-                            <label for="genero_id">Género</label>
+                        <div class="form-group <?= hasError('anyo', $error) ?>">
+                            <label for="genero_id" class="control-label">Género</label>
                             <input id="genero_id" type="text" name="genero_id"
-                                   class="form-control" value="<?= $genero_id ?>">
+                                   class="form-control"
+                                   value="<?= $genero_id?>">
                         </div>
-                        <input type="submit" name="Insertar" class="btn btn-success" value="Insertar">
+                        <input type="submit" value="Insertar"
+                               class="btn btn-success">
                         <a href="index.php" class="btn btn-info">Volver</a>
                     </form>
                 </div>
