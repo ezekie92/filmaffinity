@@ -24,30 +24,24 @@
 
         if (isset($_POST['titulo'], $_POST['anyo'], $_POST['sinopsis'],
                   $_POST['duracion'], $_POST['genero_id'])) {
-            extract(array_map('trim', $_POST), EXTR_IF_EXISTS);
-            // Filtrado de la entrada
-            $error = [];
-            $fltTitulo = comprobarTitulo($error);
-            $fltAnyo = comprobarAnyo($error);
-            $fltSinopsis = trim(filter_input(INPUT_POST, 'sinopsis'));
-            $fltDuracion = comprobarDuracion($error);
-            $pdo = conectar();
-            $fltGeneroId = comprobarGeneroId($pdo, $error);
-
-            if (empty($error)) {
+            try {
+                extract(array_map('trim', $_POST), EXTR_IF_EXISTS);
+                $error = [];
+                $flt = [];
+                $flt['titulo'] = comprobarTitulo($error);
+                $flt['anyo'] = comprobarAnyo($error);
+                $flt['sinopsis'] = trim(filter_input(INPUT_POST, 'sinopsis'));
+                $flt['duracion'] = comprobarDuracion($error);
                 $pdo = conectar();
-                $st = $pdo->prepare('INSERT INTO peliculas (titulo, anyo, sinopsis, duracion, genero_id)
-                VALUES (:titulo, :anyo, :sinopsis, :duracion, :genero_id)');
-
-                $st->execute([
-                    ':titulo' => $fltTitulo,
-                    ':anyo' => $fltAnyo,
-                    ':sinopsis' => $fltSinopsis,
-                    ':duracion' => $fltDuracion,
-                    ':genero_id' => $fltGeneroId,
-                ]);
+                $flt['generoId'] = comprobarGeneroId($pdo, $error);
+                comprobarErrores($error);
+                insertarPelicula($pdo, $flt);
                 header('Location: index.php');
-            } else {
+            } catch (EmptyParamException $e){
+                // No hago nada
+            } catch (ParamException $e){
+                header('Location: index.php');
+            } catch (ValidationException $e) {
                 foreach ($error as $err) {
                     echo "<h4>$err</h4>";
                 }
