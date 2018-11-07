@@ -7,9 +7,7 @@
         <title>Bases de datos</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <style media="screen">
-            #busqueda {
-                margin-top: 1em;
-            }
+            #busqueda { margin-top: 1em; }
         </style>
     </head>
     <body>
@@ -24,12 +22,12 @@
                     $id = $_POST['id'];
                     $pdo->beginTransaction();
                     $pdo->exec('LOCK TABLE peliculas IN SHARE MODE');
-                    if (!buscarPelicula($pdo, $id)) {?>
+                    if (!buscarPelicula($pdo, $id)) { ?>
                         <h3>La película no existe.</h3>
                         <?php
                     } else {
                         $st = $pdo->prepare('DELETE FROM peliculas WHERE id = :id');
-                        $st->execute([':id' => $id]);?>
+                        $st->execute([':id' => $id]); ?>
                         <h3>Película borrada correctamente.</h3>
                         <?php
                     }
@@ -38,14 +36,15 @@
 
                 $buscarTitulo = isset($_GET['buscarTitulo'])
                 ? trim($_GET['buscarTitulo'])
-                : "";
+                : '';
                 $st = $pdo->prepare('SELECT p.*, genero
-                    FROM peliculas p
-                    JOIN generos g
-                    ON genero_id = g.id
-                    WHERE position(lower(:titulo) in lower(titulo)) != 0');
-                    $st->execute([':titulo' => $buscarTitulo]);
-                    ?>
+                                       FROM peliculas p
+                                       JOIN generos g
+                                         ON genero_id = g.id
+                                      WHERE position(lower(:titulo) in lower(titulo)) != 0
+                                   ORDER BY id');
+                $st->execute([':titulo' => $buscarTitulo]);
+                ?>
             </div>
             <div class="row" id="busqueda">
                 <div class="col-md-12">
@@ -54,10 +53,11 @@
                         <form action="" method="get" class="form-inline">
                             <div class="form-group">
                                 <label for="buscarTitulo">Buscar por título:</label>
-                                <input id="buscarTitulo" type="text" class="form-control" name="buscarTitulo"
-                                value="<?= $buscarTitulo ?>">
+                                <input id="buscarTitulo" type="text" name="buscarTitulo"
+                                       value="<?= $buscarTitulo ?>"
+                                       class="form-control">
                             </div>
-                            <input type="submit" value="Buscar" class="btn btn-success">
+                            <input type="submit" value="Buscar" class="btn btn-primary">
                         </form>
                     </fieldset>
                 </div>
@@ -71,20 +71,25 @@
                             <th>Año</th>
                             <th>Sinopsis</th>
                             <th>Duración</th>
-                            <th>Genero</th>
+                            <th>Género</th>
                             <th>Acciones</th>
                         </thead>
                         <tbody>
                             <?php foreach ($st as $fila): ?>
                                 <tr>
-                                    <td><?= filter_var($fila['titulo'], FILTER_SANITIZE_SPECIAL_CHARS) ?></td>
-                                    <td><?= $fila['anyo'] ?></td>
-                                    <td><?= $fila['sinopsis'] ?></td>
-                                    <td><?= $fila['duracion'] ?></td>
-                                    <td><?= $fila['genero'] ?></td>
+                                    <td><?= h($fila['titulo']) ?></td>
+                                    <td><?= h($fila['anyo']) ?></td>
+                                    <td><?= h($fila['sinopsis']) ?></td>
+                                    <td><?= h($fila['duracion']) ?></td>
+                                    <td><?= h($fila['genero']) ?></td>
                                     <td>
-                                        <a href="confirm_borrado.php?id=<?= $fila['id'] ?>" class="btn btn-danger btn-xs">
+                                        <a href="confirm_borrado.php?id=<?= $fila['id'] ?>"
+                                           class="btn btn-xs btn-danger">
                                             Borrar
+                                        </a>
+                                        <a href="modificar.php?id=<?= $fila['id'] ?>"
+                                           class="btn btn-xs btn-info">
+                                            Modificar
                                         </a>
                                     </td>
                                 </tr>
@@ -95,7 +100,7 @@
             </div>
             <div class="row">
                 <div class="text-center">
-                    <a href="insertar.php" class="btn btn-primary">Insertar una nueva película</a>
+                    <a href="insertar.php" class="btn btn-info">Insertar una nueva película</a>
                 </div>
             </div>
         </div>
