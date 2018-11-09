@@ -174,7 +174,7 @@ function mostrarFormulario($valores, $error, $pdo, $accion)
                               name="sinopsis"
                               rows="8"
                               cols="80"
-                              class="form-control"><?= $sinopsis ?></textarea>
+                              class="form-control"><?= h($sinopsis) ?></textarea>
                 </div>
                 <div class="form-group <?= hasError('duracion', $error) ?>">
                     <label for="duracion" class="control-label">Duración</label>
@@ -186,14 +186,15 @@ function mostrarFormulario($valores, $error, $pdo, $accion)
                 <div class="form-group <?= hasError('genero_id', $error) ?>">
                     <label for="genero_id" class="control-label">Género</label>
                     <select class="form-control" name="genero_id">
-                        <?php
-                        foreach ($generos as $g): ?>
-                            <option value="<?= $g['id'] ?>"><?= $g['genero'] ?></option>
+                        <?php foreach ($generos as $g): ?>
+                            <option value="<?= $g['id'] ?>" <?= selected($g['id'], $genero_id) ?> >
+                                <?= $g['genero'] ?>
+                            </option>
                         <?php endforeach ?>
                     </select>
                     <?php mensajeError('genero_id', $error) ?>
                 </div>
-                <input type="submit" value="<?= h($accion) ?>"
+                <input type="submit" value="<?= $accion ?>"
                        class="btn btn-success">
                 <a href="index.php" class="btn btn-info">Volver</a>
             </form>
@@ -223,4 +224,9 @@ function comprobarPelicula($pdo, $id)
         throw new ParamException();
     }
     return $fila;
+}
+
+function selected($a, $b)
+{
+    return $a == $b ? 'selected' : '';
 }

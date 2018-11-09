@@ -1,3 +1,4 @@
+<?php session_start() ?>
 <!DOCTYPE html>
 <html lang="es" dir="ltr">
     <head>
@@ -16,7 +17,6 @@
         } else {
             header('Location: index.php');
         }
-
         $pdo = conectar();
         if (!buscarPelicula($pdo, $id)) {
             header('Location: index.php');
