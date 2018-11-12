@@ -5,7 +5,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Insertar una nueva película</title>
+        <title>Iniciar sesión</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     </head>
     <body>
@@ -23,9 +23,10 @@
             $valores = array_map('trim', $_POST);
             $flt['login'] = comprobarLogin($error);
             $flt['password'] = comprobarPassword($error);
-            comprobarUsuario($flt, $pdo, $error);
+            $usuario = comprobarUsuario($flt, $pdo, $error);
             comprobarErrores($error);
             // Sólo queda loguearse
+            $_SESSION['usuario'] = $usuario['login'];
             header('Location: index.php');
         } catch (EmptyParamException|ValidationException $e) {
             // No hago nada
@@ -44,7 +45,7 @@
                         <label for="password">Contraseña:</label>
                         <input class="form-control" type="password" name="password" value="">
                     </div>
-                    <button type="submit">Iniciar sesion</button>
+                    <button type="submit" class="btn btn-default">Iniciar sesión</button>
                 </form>
             </div>
         </div>
