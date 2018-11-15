@@ -12,6 +12,8 @@
         <?php
         require '../comunes/auxiliar.php';
 
+        barraMenu();
+
         $valores = PAR;
 
         try {

@@ -7,26 +7,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Bases de datos</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-        <style media="screen">
-            #busqueda { margin-top: 1em; }
-        </style>
     </head>
     <body>
-        <nav class="navbar navbar-default navbar-inverse">
-            <div class="container">
-                <div class="navbar-header">
-                    <a class="navbar-brand" href="#">FilmAffinity</a>
-                </div>
-                <div class="navbar-text navbar-right">
-                    <?php if (isset($_SESSION['usuario'])): ?>
-                        <?= $_SESSION['usuario'] ?>
-                        <a href="logout.php" class="btn btn-success">Logout</a>
-                    <?php else: ?>
-                        <a href="login.php" class="btn btn-success">Login</a>
-                    <?php endif ?>
-                </div>
-            </div>
-        </nav>
+        <?php
+        require '../comunes/auxiliar.php';
+
+        barraMenu();
+        ?>
         <div class="container">
             <br>
             <?php if (isset($_SESSION['mensaje'])): ?>
@@ -39,8 +26,6 @@
             <?php endif ?>
             <div class="row">
                 <?php
-                require '../comunes/auxiliar.php';
-
                 $pdo = conectar();
 
                 if (isset($_POST['id'])) {
