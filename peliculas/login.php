@@ -11,6 +11,7 @@
     <body>
         <?php
         require '../comunes/auxiliar.php';
+        barraMenu();
 
         const PAR_LOGIN = ['login' => '', 'password' => ''];
 

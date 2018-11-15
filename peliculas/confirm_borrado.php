@@ -12,6 +12,8 @@
         <?php
         require '../comunes/auxiliar.php';
 
+        barraMenu();
+
         if (!isset($_SESSION['usuario'])) {
             $_SESSION['mensaje'] = 'Debe iniciar sesión para poder borrar películas';
             header('Location: index.php');
